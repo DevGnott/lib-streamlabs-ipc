@@ -50,7 +50,7 @@ class server {
 	std::mutex m_sockets_mtx;
 #ifdef WIN32
 	std::list<std::shared_ptr<ipc::socket>> m_sockets;
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 	std::list<std::shared_ptr<ipc::socket>> m_sockets;
 #endif
 	std::string m_socketPath = "";
@@ -60,7 +60,7 @@ class server {
 	std::mutex m_clients_mtx;
 #ifdef WIN32
 	std::map<std::shared_ptr<ipc::socket>, std::shared_ptr<server_instance>> m_clients;
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 	std::map<std::shared_ptr<ipc::socket>, std::shared_ptr<server_instance>> m_clients;
 #endif
 
@@ -82,7 +82,7 @@ class server {
 #ifdef WIN32
 	void spawn_client(std::shared_ptr<ipc::socket> socket);
 	void kill_client(std::shared_ptr<ipc::socket> socket);
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 	void spawn_client(std::shared_ptr<ipc::socket> socket);
 	void kill_client(std::shared_ptr<ipc::socket> socket);
 #endif
@@ -91,7 +91,7 @@ public:
 	server();
 	~server();
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__linux__)
 	std::queue<void *> display_actions;
 	std::mutex display_lock;
 #endif

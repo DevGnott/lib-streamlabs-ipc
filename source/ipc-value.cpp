@@ -18,6 +18,7 @@
 
 #include "ipc-value.hpp"
 #include <iostream>
+#include <cstring>
 
 ipc::value::value()
 {
