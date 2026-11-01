@@ -19,11 +19,11 @@ os::apple::socket_osx::socket_osx(os::create_only_t, const std::string name)
 
 	remove(name_req.c_str());
 	if (mkfifo(name_req.c_str(), S_IRUSR | S_IWUSR) < 0)
-		throw std::exception((const std::exception &)"Could not create request pipe");
+		throw std::runtime_error("Could not create request pipe");
 
 	remove(name_rep.c_str());
 	if (mkfifo(name_rep.c_str(), S_IRUSR | S_IWUSR) < 0)
-		throw std::exception((const std::exception &)"Could not create reply pipe");
+		throw std::runtime_error("Could not create reply pipe");
 
 	fd_write = -1;
 	fd_read_b = -1;

@@ -23,7 +23,7 @@
 
 #ifdef WIN32
 #include "windows/ipc-socket-win.hpp"
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 #include "apple/ipc-socket-osx.hpp"
 #endif
 void ipc::server::watcher()
@@ -35,7 +35,7 @@ void ipc::server::watcher()
 		std::shared_ptr<os::async_op> op;
 #ifdef WIN32
 		std::shared_ptr<ipc::socket> socket;
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 		std::shared_ptr<ipc::socket> socket;
 #endif
 		std::chrono::high_resolution_clock::time_point start;
@@ -55,7 +55,7 @@ void ipc::server::watcher()
 
 #ifdef WIN32
 	std::map<std::shared_ptr<ipc::socket>, pending_accept> pa_map;
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 	std::map<std::shared_ptr<ipc::socket>, pending_accept> pa_map;
 #endif
 
@@ -86,7 +86,7 @@ void ipc::server::watcher()
 						// There was no client waiting to connect, but there might be one in the future.
 						pa_map.insert_or_assign(socket, pa);
 					}
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 					ec = socket->accept(pa.op,
 							    std::bind(&pending_accept::accept_client_cb, &pa, std::placeholders::_1, std::placeholders::_2));
 					if (ec == os::error::Success) {
@@ -101,7 +101,7 @@ void ipc::server::watcher()
 		std::vector<os::waitable *> waits;
 #ifdef WIN32
 		std::vector<std::shared_ptr<ipc::socket>> idx_to_socket;
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 		std::vector<std::shared_ptr<ipc::socket>> idx_to_socket;
 #endif
 		for (auto kv : pa_map) {
@@ -140,7 +140,7 @@ void ipc::server::kill_client(std::shared_ptr<ipc::socket> socket)
 }
 #endif
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__linux__)
 void ipc::server::spawn_client(std::shared_ptr<ipc::socket> socket)
 {
 	std::cout << "Server - spawn_client" << std::endl;
@@ -189,7 +189,7 @@ void ipc::server::initialize(std::string socketPath)
 		std::unique_lock<std::mutex> ul(m_sockets_mtx);
 		m_sockets.insert(m_sockets.end(), std::make_shared<os::windows::socket_win>(os::create_only, socketPath, 255, os::windows::pipe_type::Byte,
 											    os::windows::pipe_read_mode::Byte, true));
-#elif __APPLE__
+#elif defined(__APPLE__) || defined(__linux__)
 		std::unique_lock<std::mutex> ul(m_sockets_mtx);
 		m_sockets.insert(m_sockets.end(), std::make_shared<os::apple::socket_osx>(os::create_only, socketPath));
 #endif

@@ -83,7 +83,7 @@ public:
 
 namespace message {
 struct function_call {
-	ipc::value uid = ipc::value(0ull);
+	ipc::value uid = ipc::value(uint64_t(0));
 	ipc::value class_name = ipc::value("");
 	ipc::value function_name = ipc::value("");
 	std::vector<ipc::value> arguments;
@@ -94,7 +94,7 @@ struct function_call {
 };
 
 struct function_reply {
-	ipc::value uid = ipc::value(0ull);
+	ipc::value uid = ipc::value(uint64_t(0));
 	ipc::value obs_call_duration_ms = ipc::value(std::uint32_t(0u));
 	std::vector<ipc::value> values;
 	ipc::value error = ipc::value("");

@@ -7,6 +7,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <cstring>
+#include <stdexcept>
 #include <thread>
 
 enum SocketType : uint8_t { REQUEST, REPLY };

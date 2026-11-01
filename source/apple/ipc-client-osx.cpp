@@ -122,7 +122,12 @@ std::vector<ipc::value> ipc::client_osx::call_synchronous_helper(const std::stri
 
 	const auto uniqueId = cname.size() + fname.size() + rand();
 	std::string sem_name = "sem-cb" + std::to_string(uniqueId);
+#ifdef __APPLE__
 	std::string path = "/tmp/" + sem_name;
+#else
+	// POSIX named semaphores on Linux must be "/name" without further slashes.
+	std::string path = "/" + sem_name;
+#endif
 	sem_unlink(path.c_str());
 	remove(path.c_str());
 	cd.sem = sem_open(path.c_str(), O_CREAT | O_EXCL, 0644, 0);

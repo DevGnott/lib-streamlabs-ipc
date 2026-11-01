@@ -17,6 +17,7 @@
 ******************************************************************************/
 
 #pragma once
+#include <cstdint>
 #include <inttypes.h>
 #include <string>
 #include <vector>
@@ -38,7 +39,7 @@ enum class type : uint32_t {
 };
 
 struct value {
-	type type;
+	ipc::type type;
 	union {
 		float fp32;
 		double fp64;

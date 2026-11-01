@@ -71,7 +71,7 @@ IF (WIN32)
 		"${PROJECT_SOURCE_DIR}/source/windows/ipc-socket-win.hpp"
 		"${PROJECT_SOURCE_DIR}/source/windows/ipc-socket-win.cpp"
 	)
-ELSEIF(APPLE)
+ELSEIF(APPLE OR UNIX)
     SET(lib-streamlabs-ipc_SOURCES_APPLE
 		"${PROJECT_SOURCE_DIR}/source/apple/semaphore.hpp"
 		"${PROJECT_SOURCE_DIR}/source/apple/semaphore.cpp"
@@ -156,7 +156,7 @@ IF(WIN32)
 		lib-streamlabs-ipc_SOURCES
 		${lib-streamlabs-ipc_SOURCES_WINDOWS}
 	)
-ELSEIF(APPLE)
+ELSEIF(APPLE OR UNIX)
 	# MacOSX
 	LIST(
 		APPEND
@@ -183,6 +183,9 @@ LINK_DIRECTORIES(
 ADD_LIBRARY(${PROJECT_NAME} STATIC
 	${lib-streamlabs-ipc_SOURCES}
 )
+
+# The library is linked into the obs_studio_client shared Node addon
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Linking
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
